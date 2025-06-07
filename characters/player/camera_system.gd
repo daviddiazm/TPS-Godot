@@ -22,8 +22,8 @@ func _unhandled_input(event: InputEvent) -> void:
 func camera_look(mouse_movement: Vector2) -> void:
 	camera_rotation += mouse_movement
 	reset_rotation()
-	#character.transform.basis = Basis()
-	camera_rotation.y = clamp(camera_rotation.y, -max_y_rotation, max_y_rotation)
+	character.transform.basis = Basis()
+	camera_rotation.y = clamp(camera_rotation.y, -max_y_rotation, max_y_rotation+180)
 	print(camera_rotation.y)
 	character.rotate_object_local(Vector3(0,1,0), -camera_rotation.x * camera_sensitivity)
 	rotate_object_local(Vector3(1,0,0), -camera_rotation.y * camera_sensitivity)

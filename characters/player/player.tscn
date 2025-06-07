@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dnggagvwn3yn5"]
+[gd_scene load_steps=6 format=3 uid="uid://dnggagvwn3yn5"]
 
 [ext_resource type="Script" uid="uid://ci4el60gotlmw" path="res://characters/player/camera_system.gd" id="1_508ok"]
 
@@ -33,24 +33,38 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 "
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yntov"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_508ok"]
+radius = 0.8
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_wfwh0"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_508ok"]
+margin = 0.01
 
 [node name="Player" type="CharacterBody3D"]
 script = SubResource("GDScript_b886q")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_yntov")
+shape = SubResource("CapsuleShape3D_508ok")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_wfwh0")
 
 [node name="CameraSystem" type="Node3D" parent="." node_paths=PackedStringArray("character")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 script = ExtResource("1_508ok")
 character = NodePath("..")
 
-[node name="Camera3D" type="Camera3D" parent="CameraSystem"]
-transform = Transform3D(0.978148, 0.0538115, -0.200827, 0, 0.965926, 0.258819, 0.207912, -0.253163, 0.944818, 0.5, 3, 3.58)
+[node name="EdgeSpringArm3D" type="SpringArm3D" parent="CameraSystem"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+shape = SubResource("SphereShape3D_508ok")
+spring_length = 0.5
+
+[node name="RearSpringArm3D" type="SpringArm3D" parent="CameraSystem/EdgeSpringArm3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0.5)
+spring_length = 2.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraSystem/EdgeSpringArm3D/RearSpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
