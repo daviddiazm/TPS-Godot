@@ -35,7 +35,6 @@ func camera_look(mouse_movement: Vector2) -> void:
 	rotate_object_local(Vector3(1,0,0), -camera_rotation.y * camera_sensitivity)
 
 func swap_camera_alignment() -> void:
-	#var new_pos: float = new_pos * -default_spring_arm_edge_length
 	default_spring_arm_edge_length = -default_spring_arm_edge_length
 	set_spring_arm_postition(default_spring_arm_edge_length, transition_speed_camera_swap)
 	
