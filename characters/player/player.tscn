@@ -53,11 +53,13 @@ shape = SubResource("CapsuleShape3D_508ok")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_wfwh0")
 
-[node name="CameraSystem" type="Node3D" parent="." node_paths=PackedStringArray("character", "edge_spring_arm")]
+[node name="CameraSystem" type="Node3D" parent="." node_paths=PackedStringArray("character", "edge_spring_arm", "rear_spring_arm", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 script = ExtResource("1_508ok")
 character = NodePath("..")
 edge_spring_arm = NodePath("EdgeSpringArm3D")
+rear_spring_arm = NodePath("EdgeSpringArm3D/RearSpringArm3D")
+camera = NodePath("EdgeSpringArm3D/RearSpringArm3D/Camera3D")
 
 [node name="EdgeSpringArm3D" type="SpringArm3D" parent="CameraSystem"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
