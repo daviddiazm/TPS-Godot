@@ -1,35 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://dnggagvwn3yn5"]
+[gd_scene load_steps=14 format=3 uid="uid://dnggagvwn3yn5"]
 
 [ext_resource type="Script" uid="uid://ci4el60gotlmw" path="res://characters/player/camera_system.gd" id="1_508ok"]
+[ext_resource type="Script" uid="uid://pflx1lev0swo" path="res://characters/player/stateMachine/playerStateMachine/player_state_machine.gd" id="2_exd8k"]
+[ext_resource type="Script" uid="uid://c284yhxq05ha0" path="res://characters/player/stateMachine/playerStateMachine/states/idle.gd" id="3_5dc8e"]
+[ext_resource type="Script" uid="uid://bcrsi8i4er0b3" path="res://characters/player/stateMachine/playerStateMachine/states/jump.gd" id="4_c6leb"]
+[ext_resource type="Script" uid="uid://du1swryoxasgp" path="res://characters/player/stateMachine/playerStateMachine/states/run.gd" id="5_dirf7"]
+[ext_resource type="Script" uid="uid://bfc388lss7dlj" path="res://characters/player/stateMachine/playerStateMachine/states/fall.gd" id="6_idpv6"]
+[ext_resource type="Script" uid="uid://ctue1lrtkmt8k" path="res://characters/player/stateMachine/playerStateMachine/states/sprint.gd" id="7_dirf7"]
+[ext_resource type="Script" uid="uid://cf5vwm22kpuaa" path="res://characters/player/stateMachine/playerStateMachine/states/sprint_jump.gd" id="8_rpf03"]
+[ext_resource type="Script" uid="uid://k5qajqrli3x0" path="res://characters/player/stateMachine/playerStateMachine/states/sprint_fall.gd" id="9_x5dtk"]
 
 [sub_resource type="GDScript" id="GDScript_b886q"]
 script/source = "extends CharacterBody3D
 
+func set_velocity_from_motion(velocityFromMotion: Vector3) -> void:
+	velocity = velocityFromMotion
 
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
-
-
-func _physics_process(delta: float) -> void:
-	# Add the gravity.
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-
-	# Handle jump.
-	if Input.is_action_just_pressed(\"jump\") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector(\"move_left\", \"move_right\", \"forward\", \"backward\")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
-
+func _physics_process(_delta: float) -> void:
 	move_and_slide()
 "
 
@@ -72,3 +59,28 @@ spring_length = 2.0
 
 [node name="Camera3D" type="Camera3D" parent="CameraSystem/EdgeSpringArm3D/RearSpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("start_state")]
+script = ExtResource("2_exd8k")
+start_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("3_5dc8e")
+
+[node name="Jump" type="Node" parent="StateMachine"]
+script = ExtResource("4_c6leb")
+
+[node name="Run" type="Node" parent="StateMachine"]
+script = ExtResource("5_dirf7")
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource("6_idpv6")
+
+[node name="Sprint" type="Node" parent="StateMachine"]
+script = ExtResource("7_dirf7")
+
+[node name="SprintJump" type="Node" parent="StateMachine"]
+script = ExtResource("8_rpf03")
+
+[node name="SprintFall" type="Node" parent="StateMachine"]
+script = ExtResource("9_x5dtk")

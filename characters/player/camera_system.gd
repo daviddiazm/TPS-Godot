@@ -44,9 +44,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		enter_aim()
 	if event.is_action_released("aim"):
 		exit_aim()
-	if event.is_action_pressed("run"):
+	if event.is_action_pressed("sprint"):
 		enter_spirnt()
-	if event.is_action_released("run"):
+	if event.is_action_released("sprint"):
 		exit_sprint()
 	
 func camera_look(mouse_movement: Vector2) -> void:
@@ -112,7 +112,6 @@ func exit_aim() -> void:
 		camera_tween.kill()
 	camera_tween = get_tree().create_tween()
 	camera_tween.set_trans(Tween.TRANS_EXPO)
-	#camera_tween.set_ease(Tween.EASE_IN_OUT)
 	camera_tween.set_ease(Tween.EASE_IN)
 	camera_tween.set_parallel(true)
 	camera_tween.tween_property(camera, "fov", default_camera_fov, aim_speed)
