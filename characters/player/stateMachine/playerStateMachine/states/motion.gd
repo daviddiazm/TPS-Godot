@@ -8,13 +8,16 @@ const JUMP_VELOCITY = 4.5
 const ACCELERATION: float = 30
 const SPRINT_SPEED: float = 8
 const GRAVITY: float = -8.9
+const SPRINT_DURATION: float = 3.0
 
 static var input_dir: Vector2 = Vector2.ZERO
 static var direction: Vector3 = Vector3.ZERO
 static var velocity:  Vector3 = Vector3.ZERO
+static var sprint_remaining: float = 0.0
 
 func _ready() -> void:
 	velocity_updated.connect(owner.set_velocity_from_motion)
+	sprint_remaining = SPRINT_DURATION
 
 func set_direction() -> void:
 	input_dir = Input.get_vector("move_left", "move_right", "forward", "backward")
@@ -31,3 +34,6 @@ func calculate_graivty(_delta: float) -> void:
 
 func is_on_floor() -> bool:
 	return owner.is_on_floor()
+
+func replenish_sprint(_delta: float):
+	sprint_remaining = min(sprint_remaining + _delta, SPRINT_DURATION)

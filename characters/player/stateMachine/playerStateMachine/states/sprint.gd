@@ -1,6 +1,11 @@
 extends Motion
 
-func _enter_tree() -> void:
+signal sprint_started
+signal sprint_ended
+
+func _enter() -> void:
+	#if sprint_remaining > 0:
+	sprint_started.emit()
 	print(name)
 
 func _state_input(_event: InputEvent) -> void:
@@ -8,16 +13,21 @@ func _state_input(_event: InputEvent) -> void:
 		finish.emit("SprintJump")
 
 	if _event.is_action_released("sprint"):
-		finish.emit("SprintFall")
-	
-	
+		sprint_ended.emit()
+		finish.emit("Run")
 
 
 func _update(_delta: float) -> void:
 	set_direction()
 	calculate_velocity(SPRINT_SPEED, direction, _delta)
 	
+	sprint_remaining -= _delta
+	if sprint_remaining <= 0:
+		finish.emit("Run")
+		sprint_ended.emit()
+	
 	if direction == Vector3.ZERO:
+		sprint_ended.emit()
 		finish.emit("Idle")
 		
 	if not is_on_floor():

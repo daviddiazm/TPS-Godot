@@ -1,6 +1,6 @@
 extends Motion
 
-func _enter_tree() -> void:
+func _enter() -> void:
 	print(name)
 	jump()
 

@@ -23,8 +23,6 @@ var max_y_rotation: int = 180
 enum CameraAlignment {RIGHT = 1, LEFT = -1, CENTER = 0}
 var current_camera_alignment = CameraAlignment.RIGHT
 
-var camera_side := 1 # 1 = derecha, -1 = izquierda
-
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -44,10 +42,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		enter_aim()
 	if event.is_action_released("aim"):
 		exit_aim()
-	if event.is_action_pressed("sprint"):
-		enter_spirnt()
-	if event.is_action_released("sprint"):
-		exit_sprint()
+	#if event.is_action_pressed("sprint"):
+		#enter_spirnt()
+	#if event.is_action_released("sprint"):
+		#exit_sprint()
 	
 func camera_look(mouse_movement: Vector2) -> void:
 	camera_rotation += mouse_movement
@@ -61,7 +59,6 @@ func change_camera_alignment(alignment: CameraAlignment ) -> void:
 	current_camera_alignment = alignment
 
 func swap_camera_alignment() -> void:
-	camera_side *= -1
 	match current_camera_alignment:
 		CameraAlignment.RIGHT:
 			change_camera_alignment(CameraAlignment.LEFT)
@@ -165,3 +162,10 @@ func exit_sprint() -> void:
 		"spring_length", 
 		default_spring_arm_rear_length, 
 		aim_speed)
+
+
+func _on_sprint_sprint_started() -> void:
+	enter_spirnt()
+
+func _on_sprint_ended() -> void:
+	exit_sprint()

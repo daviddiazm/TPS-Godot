@@ -84,3 +84,7 @@ script = ExtResource("8_rpf03")
 
 [node name="SprintFall" type="Node" parent="StateMachine"]
 script = ExtResource("9_x5dtk")
+
+[connection signal="sprint_ended" from="StateMachine/Sprint" to="CameraSystem" method="_on_sprint_ended"]
+[connection signal="sprint_started" from="StateMachine/Sprint" to="CameraSystem" method="_on_sprint_sprint_started"]
+[connection signal="sprint_ended" from="StateMachine/SprintFall" to="CameraSystem" method="_on_sprint_ended"]
