@@ -38,10 +38,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		camera_look(mouse_event)
 	if event.is_action_pressed("swap_camera"):
 		swap_camera_alignment()
-	if event.is_action_pressed("aim"):
-		enter_aim()
-	if event.is_action_released("aim"):
-		exit_aim()
+	#if event.is_action_pressed("aim"):
+		#enter_aim()
+	#if event.is_action_released("aim"):
+		#exit_aim()
 	#if event.is_action_pressed("sprint"):
 		#enter_spirnt()
 	#if event.is_action_released("sprint"):
@@ -169,3 +169,10 @@ func _on_sprint_sprint_started() -> void:
 
 func _on_sprint_ended() -> void:
 	exit_sprint()
+
+
+func _on_aim_entered() -> void:
+	enter_aim()
+
+func _on_aim_exited() -> void:
+	exit_aim()

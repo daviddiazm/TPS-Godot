@@ -1,14 +1,18 @@
-[gd_scene load_steps=14 format=3 uid="uid://dnggagvwn3yn5"]
+[gd_scene load_steps=17 format=3 uid="uid://dnggagvwn3yn5"]
 
 [ext_resource type="Script" uid="uid://ci4el60gotlmw" path="res://characters/player/camera_system.gd" id="1_508ok"]
 [ext_resource type="Script" uid="uid://pflx1lev0swo" path="res://characters/player/stateMachine/playerStateMachine/player_state_machine.gd" id="2_exd8k"]
 [ext_resource type="Script" uid="uid://c284yhxq05ha0" path="res://characters/player/stateMachine/playerStateMachine/states/idle.gd" id="3_5dc8e"]
+[ext_resource type="Resource" uid="uid://bhee23ndrmtks" path="res://characters/player/palyer_movement_stats.tres" id="3_on558"]
 [ext_resource type="Script" uid="uid://bcrsi8i4er0b3" path="res://characters/player/stateMachine/playerStateMachine/states/jump.gd" id="4_c6leb"]
 [ext_resource type="Script" uid="uid://du1swryoxasgp" path="res://characters/player/stateMachine/playerStateMachine/states/run.gd" id="5_dirf7"]
 [ext_resource type="Script" uid="uid://bfc388lss7dlj" path="res://characters/player/stateMachine/playerStateMachine/states/fall.gd" id="6_idpv6"]
 [ext_resource type="Script" uid="uid://ctue1lrtkmt8k" path="res://characters/player/stateMachine/playerStateMachine/states/sprint.gd" id="7_dirf7"]
 [ext_resource type="Script" uid="uid://cf5vwm22kpuaa" path="res://characters/player/stateMachine/playerStateMachine/states/sprint_jump.gd" id="8_rpf03"]
 [ext_resource type="Script" uid="uid://k5qajqrli3x0" path="res://characters/player/stateMachine/playerStateMachine/states/sprint_fall.gd" id="9_x5dtk"]
+[ext_resource type="Script" uid="uid://3h0aojtun33h" path="res://characters/player/stateMachine/playerStateMachine/states/aim_idle.gd" id="10_3t07l"]
+[ext_resource type="Script" uid="uid://cn1512y0b37sb" path="res://characters/player/stateMachine/playerStateMachine/states/aim_walk.gd" id="11_on558"]
+[ext_resource type="PackedScene" uid="uid://dqyawbq35ufe7" path="res://assets/character/character_model.tscn" id="13_gqopd"]
 
 [sub_resource type="GDScript" id="GDScript_b886q"]
 script/source = "extends CharacterBody3D
@@ -23,8 +27,6 @@ func _physics_process(_delta: float) -> void:
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_508ok"]
 radius = 0.8
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_wfwh0"]
-
 [sub_resource type="SphereShape3D" id="SphereShape3D_508ok"]
 margin = 0.01
 
@@ -35,10 +37,6 @@ script = SubResource("GDScript_b886q")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_508ok")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("CapsuleMesh_wfwh0")
 
 [node name="CameraSystem" type="Node3D" parent="." node_paths=PackedStringArray("character", "edge_spring_arm", "rear_spring_arm", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -60,8 +58,10 @@ spring_length = 2.0
 [node name="Camera3D" type="Camera3D" parent="CameraSystem/EdgeSpringArm3D/RearSpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("start_state")]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("character_model", "start_state")]
 script = ExtResource("2_exd8k")
+movement_stats_player = ExtResource("3_on558")
+character_model = NodePath("../CharacterModel")
 start_state = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="StateMachine"]
@@ -85,6 +85,65 @@ script = ExtResource("8_rpf03")
 [node name="SprintFall" type="Node" parent="StateMachine"]
 script = ExtResource("9_x5dtk")
 
+[node name="AimIdle" type="Node" parent="StateMachine"]
+script = ExtResource("10_3t07l")
+
+[node name="AimWalk" type="Node" parent="StateMachine"]
+script = ExtResource("11_on558")
+
+[node name="CharacterModel" parent="." instance=ExtResource("13_gqopd")]
+transform = Transform3D(-1, 0, -1.50996e-07, 0, 1, 0, 1.50996e-07, 0, -1, 0, 0, 0)
+
+[node name="Skeleton3D" parent="CharacterModel/character/Armature" index="0"]
+bones/0/position = Vector3(1.37227, 1.4319, -98.1638)
+bones/0/rotation = Quaternion(-0.682886, -0.271026, 0.247853, 0.63149)
+bones/1/rotation = Quaternion(0.06776, 0.0402037, -0.00635739, 0.996871)
+bones/2/rotation = Quaternion(0.0997257, 0.0797703, -0.0210676, 0.991589)
+bones/3/rotation = Quaternion(0.0997255, 0.0797704, -0.0210676, 0.991589)
+bones/4/rotation = Quaternion(-0.0516077, -0.0110242, 0.00219377, 0.998604)
+bones/5/rotation = Quaternion(-0.0495089, 0.176427, -0.0104635, 0.983012)
+bones/7/rotation = Quaternion(0.604088, 0.388651, -0.578904, 0.385872)
+bones/8/rotation = Quaternion(0.465338, -0.109829, 0.0769021, 0.87492)
+bones/9/rotation = Quaternion(-0.107229, 0.0870748, 0.448398, 0.883097)
+bones/10/rotation = Quaternion(-0.159855, 0.139976, -0.0867296, 0.97331)
+bones/11/rotation = Quaternion(0.199253, 0.126606, 0.334384, 0.912391)
+bones/12/rotation = Quaternion(-0.0415838, 0.00060036, -0.001456, 0.999134)
+bones/15/rotation = Quaternion(0.0186817, -0.00298763, 0.156897, 0.987434)
+bones/16/rotation = Quaternion(0.121749, -0.00093119, -0.00739871, 0.992533)
+bones/19/rotation = Quaternion(0.0325572, -0.000886548, -0.0433735, 0.998528)
+bones/20/rotation = Quaternion(0.26019, -0.00225205, 0.0140223, 0.965453)
+bones/23/rotation = Quaternion(0.239598, -0.0225615, -0.149671, 0.959001)
+bones/24/rotation = Quaternion(0.266338, 0.00188215, 0.0237259, 0.963586)
+bones/27/rotation = Quaternion(0.254729, -0.042641, -0.239559, 0.935899)
+bones/28/rotation = Quaternion(0.34451, 0.0104241, 0.0509335, 0.937342)
+bones/31/rotation = Quaternion(0.650953, -0.351325, 0.538349, 0.403747)
+bones/32/rotation = Quaternion(0.443258, 0.102064, 0.154411, 0.877076)
+bones/33/rotation = Quaternion(-0.0424455, -0.00462593, -0.411036, 0.910619)
+bones/34/rotation = Quaternion(0.103455, -0.0567144, 0.00287942, 0.993012)
+bones/35/rotation = Quaternion(0.144764, 0.0244884, -0.367484, 0.918368)
+bones/36/rotation = Quaternion(0.0036799, 0.00557673, 0.184608, 0.98279)
+bones/39/rotation = Quaternion(-0.000819076, 0.01009, -0.0530849, 0.998539)
+bones/40/rotation = Quaternion(0.143278, 0.000221263, 0.00807071, 0.98965)
+bones/43/rotation = Quaternion(0.0439645, 0.00770622, -0.0301172, 0.998549)
+bones/44/rotation = Quaternion(0.283892, 0.0018306, -0.0200286, 0.958645)
+bones/47/rotation = Quaternion(0.122493, -0.00149407, 0.0880076, 0.988558)
+bones/48/rotation = Quaternion(0.357194, -0.000620391, -0.0410074, 0.933129)
+bones/52/rotation = Quaternion(0.386825, -0.00887351, -0.0816511, 0.918489)
+bones/55/rotation = Quaternion(0.0767841, 0.212338, 0.96364, -0.142877)
+bones/56/rotation = Quaternion(-0.316639, 0.120946, -0.0646356, 0.938581)
+bones/57/rotation = Quaternion(0.544362, -0.0749557, -0.0298396, 0.834962)
+bones/58/rotation = Quaternion(0.284456, -0.00625838, -0.018908, 0.958482)
+bones/60/rotation = Quaternion(-0.126139, 0.0316146, 0.978906, 0.157584)
+bones/61/rotation = Quaternion(-0.316847, 0.071967, 0.000675511, 0.945742)
+bones/62/rotation = Quaternion(0.641998, 0.123179, 0.107005, 0.749143)
+
 [connection signal="sprint_ended" from="StateMachine/Sprint" to="CameraSystem" method="_on_sprint_ended"]
 [connection signal="sprint_started" from="StateMachine/Sprint" to="CameraSystem" method="_on_sprint_sprint_started"]
 [connection signal="sprint_ended" from="StateMachine/SprintFall" to="CameraSystem" method="_on_sprint_ended"]
+[connection signal="aim_entered" from="StateMachine/AimIdle" to="CameraSystem" method="_on_aim_entered"]
+[connection signal="aim_exited" from="StateMachine/AimIdle" to="CameraSystem" method="_on_aim_exited"]
+[connection signal="aim_entered" from="StateMachine/AimWalk" to="CameraSystem" method="_on_aim_entered"]
+[connection signal="aim_exited" from="StateMachine/AimWalk" to="CameraSystem" method="_on_aim_exited"]
+
+[editable path="CharacterModel"]
+[editable path="CharacterModel/character"]

@@ -6,6 +6,8 @@ signal sprint_ended
 func _enter() -> void:
 	#if sprint_remaining > 0:
 	sprint_started.emit()
+	#animation_state_change.emit("Sprint")
+	animation_state_change.emit("Run")
 	print(name)
 
 func _state_input(_event: InputEvent) -> void:
@@ -19,7 +21,7 @@ func _state_input(_event: InputEvent) -> void:
 
 func _update(_delta: float) -> void:
 	set_direction()
-	calculate_velocity(SPRINT_SPEED, direction, _delta)
+	calculate_velocity(sprint_speed, direction, PALYER_MOVEMENT_STATS.acceleration,_delta)
 	
 	sprint_remaining -= _delta
 	if sprint_remaining <= 0:

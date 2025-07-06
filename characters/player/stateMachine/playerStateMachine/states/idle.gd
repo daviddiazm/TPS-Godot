@@ -2,14 +2,21 @@ extends Motion
 
 func _enter() -> void:
 	print(name)
+	animation_state_change.emit("Idle")
 	
 func _state_input(_event: InputEvent) -> void:
 	if _event.is_action_pressed("jump"):
 		finish.emit("Jump")
+	
+	if _event.is_action_pressed("sprint") and sprint_remaining > 0.5 :
+		finish.emit("Sprint")
+	
+	if _event.is_action_pressed("aim"):
+		finish.emit("AimIdle")
 
 func _update(_delta: float) -> void:
 	set_direction()
-	calculate_velocity(SPEED, direction, _delta)
+	calculate_velocity(speed, direction, PALYER_MOVEMENT_STATS.acceleration,_delta)
 	replenish_sprint(_delta)
 	
 	#if direction != Vector3.ZERO:
