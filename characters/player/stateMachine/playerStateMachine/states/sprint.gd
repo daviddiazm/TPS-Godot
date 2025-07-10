@@ -4,11 +4,8 @@ signal sprint_started
 signal sprint_ended
 
 func _enter() -> void:
-	#if sprint_remaining > 0:
 	sprint_started.emit()
-	#animation_state_change.emit("Sprint")
-	animation_state_change.emit("Run")
-	print(name)
+	return super._enter()
 
 func _state_input(_event: InputEvent) -> void:
 	if _event.is_action_pressed("jump"):
@@ -34,3 +31,4 @@ func _update(_delta: float) -> void:
 		
 	if not is_on_floor():
 		finish.emit("Fall")
+	input_direction_change.emit(input_dir)

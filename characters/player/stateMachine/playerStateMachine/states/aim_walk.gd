@@ -5,8 +5,7 @@ signal aim_exited
 
 func _enter() -> void:
 	aim_entered.emit()
-	animation_state_change.emit("Walk")
-	print(name)
+	return super._enter()
 	
 func _state_input(_event: InputEvent) -> void:
 	if _event.is_action_pressed("jump"):
@@ -33,3 +32,4 @@ func _update(_delta: float) -> void:
 	if not is_on_floor():
 		aim_exited.emit()
 		finish.emit("Fall")
+	input_direction_change.emit(input_dir)

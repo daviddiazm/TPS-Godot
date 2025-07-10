@@ -3,6 +3,9 @@ class_name Motion
 
 signal velocity_updated(velocityFromMotion: Vector3)
 signal animation_state_change(state: String)
+signal input_direction_change(_input_direction: Vector2)
+
+@export var on_enter_animation: String
 
 var speed : float
 var sprint_speed: float
@@ -10,15 +13,6 @@ var aim_speed: float
 var jump_velocity: float
 var jump_gravity: float
 var fall_gravity: float
-
-
-#const SPEED = 5.0
-#const JUMP_VELOCITY = 4.5
-#const AIM_SPEED: float = 2.0
-#const ACCELERATION: float = 30
-#const SPRINT_SPEED: float = 8
-#const GRAVITY: float = -8.9
-#const SPRINT_DURATION: float = 3.0
 
 static var input_dir: Vector2 = Vector2.ZERO
 static var direction: Vector3 = Vector3.ZERO
@@ -46,14 +40,17 @@ func _ready() -> void:
 	jump_gravity = PALYER_MOVEMENT_STATS.get_jump_gravity()
 	fall_gravity = PALYER_MOVEMENT_STATS.get_fall_gravity()
 	jump_velocity = PALYER_MOVEMENT_STATS.get_jump_velocity(jump_gravity)
-	print("jump gravity ", jump_gravity)
-	print("fall gravity ", fall_gravity)
-	print("jump velocity ", jump_velocity)
-	print("speed ", speed)
+
+func _enter() -> void:
+	if on_enter_animation:
+		animation_state_change.emit(on_enter_animation)
 
 func set_direction() -> void:
 	input_dir = Input.get_vector("move_left", "move_right", "forward", "backward")
-	direction = (owner.global_transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if input_dir != Vector2.ZERO:
+		direction = (owner.global_transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	else:
+		direction = Vector3.ZERO
 
 func calculate_velocity(_speed: float, _direction: Vector3, acceleration,_delta: float) -> void:
 	velocity.x = move_toward(velocity.x, _direction.x * _speed, acceleration * _delta)

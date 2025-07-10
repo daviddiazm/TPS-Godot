@@ -1,5 +1,7 @@
 extends Node3D
 
+signal mouse_rotated(_rotation: Vector2)
+
 @export var character : CharacterBody3D
 @export var edge_spring_arm: SpringArm3D
 @export var rear_spring_arm: SpringArm3D
@@ -19,7 +21,7 @@ extends Node3D
 var camera_tween: Tween
 var camera_rotation: Vector2 = Vector2.ZERO
 var camera_sensitivity: float = 0.002
-var max_y_rotation: int = 180
+var max_y_rotation: int = 90
 enum CameraAlignment {RIGHT = 1, LEFT = -1, CENTER = 0}
 var current_camera_alignment = CameraAlignment.RIGHT
 
@@ -34,27 +36,24 @@ func _unhandled_input(event: InputEvent) -> void:
 		else :
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if event is InputEventMouseMotion:
-		var mouse_event: Vector2 = event.relative
+		var mouse_event: Vector2 = event.relative * camera_sensitivity
 		camera_look(mouse_event)
 	if event.is_action_pressed("swap_camera"):
 		swap_camera_alignment()
-	#if event.is_action_pressed("aim"):
-		#enter_aim()
-	#if event.is_action_released("aim"):
-		#exit_aim()
-	#if event.is_action_pressed("sprint"):
-		#enter_spirnt()
-	#if event.is_action_released("sprint"):
-		#exit_sprint()
-	
+		
+
 func camera_look(mouse_movement: Vector2) -> void:
 	camera_rotation += mouse_movement
-	reset_rotation()
+	camera_rotation.y = clamp(camera_rotation.y, deg_to_rad(-max_y_rotation), deg_to_rad(max_y_rotation))
+	
+	transform.basis = Basis()
 	character.transform.basis = Basis()
-	camera_rotation.y = clamp(camera_rotation.y, -max_y_rotation, max_y_rotation+180)
-	character.rotate_object_local(Vector3(0,1,0), -camera_rotation.x * camera_sensitivity)
-	rotate_object_local(Vector3(1,0,0), -camera_rotation.y * camera_sensitivity)
-
+	
+	character.rotate_object_local(Vector3(0,1,0), -camera_rotation.x)
+	rotate_object_local(Vector3(1,0,0), -camera_rotation.y)
+	
+	mouse_rotated.emit(camera_rotation)
+	
 func change_camera_alignment(alignment: CameraAlignment ) -> void:
 	current_camera_alignment = alignment
 

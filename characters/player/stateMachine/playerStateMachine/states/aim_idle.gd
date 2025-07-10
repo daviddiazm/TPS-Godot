@@ -5,8 +5,7 @@ signal aim_exited
 
 func _enter() -> void:
 	aim_entered.emit()
-	animation_state_change.emit("Idle")
-	print(name)
+	return super._enter()
 	
 func _state_input(_event: InputEvent) -> void:
 	if _event.is_action_pressed("jump"):

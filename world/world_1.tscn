@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://divobeoy3ca88"]
+[gd_scene load_steps=7 format=3 uid="uid://divobeoy3ca88"]
 
 [ext_resource type="Material" uid="uid://dex2gusbt785b" path="res://assets/textures/prototype_texture.tres" id="1_ndxrh"]
 [ext_resource type="PackedScene" uid="uid://dnggagvwn3yn5" path="res://characters/player/player.tscn" id="2_yntov"]
@@ -14,6 +14,8 @@ sky_material = SubResource("ProceduralSkyMaterial_ndxrh")
 background_mode = 2
 sky = SubResource("Sky_yntov")
 tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_yntov"]
 
 [node name="World1" type="Node3D"]
 
@@ -40,3 +42,7 @@ material = ExtResource("1_ndxrh")
 
 [node name="Player" parent="." instance=ExtResource("2_yntov")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.369, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.47024, -3)
+mesh = SubResource("BoxMesh_yntov")

@@ -1,10 +1,5 @@
 extends Motion
 
-func _enter() -> void:
-	print(name)
-	animation_state_change.emit("Walk")
-
-
 func _state_input(_event: InputEvent) -> void:
 	if _event.is_action_pressed("jump"):
 		finish.emit("Jump")
@@ -25,3 +20,4 @@ func _update(_delta: float) -> void:
 		
 	if not is_on_floor():
 		finish.emit("Fall")
+	input_direction_change.emit(input_dir)
